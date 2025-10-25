@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Чухлокарты</title>
+    <link rel="stylesheet" href="css/style.css" />
+    <style></style>
+  </head>
+  <body>
+    <div id="map"></div>
+
+    <div class="control">
+      <select id="source"></select>
+    </div>
+
+    <div id="zoom-panel" class="leaflet-bar custom-zoom">
+      <a
+        id="zoom-out"
+        class="leaflet-control-zoom-out"
+        href="#"
+        title="Zoom out"
+        aria-label="Zoom out"
+        >−</a
+      >
+      <span id="zoom-level" class="zoom-label"></span>
+      <a id="zoom-in" class="leaflet-control-zoom-in" href="#" title="Zoom in" aria-label="Zoom in"
+        >+</a
+      >
+    </div>
+
+    <div id="br-panel" class="toolbox">
+      <span id="coord-status" class="status"></span>
+      <button
+        id="btn-goto"
+        class="tool-btn"
+        title="Перейти к координатам"
+        aria-label="Перейти к координатам"
+      >
+        <svg class="icon">
+          <use href="#i-go" />
+        </svg>
+      </button>
+      <button id="btn-measure" class="tool-btn" title="Линейка" aria-label="Линейка">
+        <svg class="icon">
+          <use href="#i-ruler" />
+        </svg>
+      </button>
+      <button
+        id="btn-geoloc"
+        class="tool-btn"
+        title="Текущие координаты"
+        aria-label="Текущие координаты"
+      >
+        <svg class="icon">
+          <use href="#i-gps" />
+        </svg>
+      </button>
+    </div>
+
+    <script type="module" src="main.js"></script>
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      style="position: absolute; width: 0; height: 0; overflow: hidden"
+      aria-hidden="true"
+    >
+      <!-- GPS / geolocate -->
+      <symbol id="i-gps" viewBox="0 0 24 24">
+        <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2" />
+        <path
+          d="M12 2v3M12 19v3M2 12h3M19 12h3"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+        <circle cx="12" cy="12" r="2" fill="currentColor" />
+      </symbol>
+
+      <!-- Ruler -->
+      <symbol id="i-ruler" viewBox="0 0 24 24">
+        <rect
+          x="3"
+          y="6"
+          width="18"
+          height="12"
+          rx="2"
+          ry="2"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+        />
+        <path
+          d="M7 8v4M10 8v2M13 8v4M16 8v2M19 8v4"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+        />
+      </symbol>
+
+      <!-- Go (arrow) -->
+      <symbol id="i-go" viewBox="0 0 24 24">
+        <path d="M5 12h10" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        <path
+          d="M12 7l5 5-5 5"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        />
+      </symbol>
+    </svg>
+  </body>
+</html>
