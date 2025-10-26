@@ -14,15 +14,26 @@ function createTileLayer(key, maxNativeZoom) {
 
 function attach(map, sources) {
   const layers = {};
+  const listeners = new Set();
   const select = document.getElementById('source');
-  sources.forEach((s, i) => {
-    const opt = document.createElement('option');
-    opt.value = s.key;
-    opt.textContent = s.name;
-    select.appendChild(opt);
-    layers[s.key] = createTileLayer(s.key, s.max_zoom);
-    if (i === 0) layers[s.key].addTo(map);
+  let currentKey;
+
+  sources.forEach((s) => {
+    if (select) {
+      const opt = document.createElement('option');
+      opt.value = s.key;
+      opt.textContent = s.name;
+      select.appendChild(opt);
+    }
+    const maxNZ = s.max_zoom ?? s.maxZoom ?? 19;
+    layers[s.key] = createTileLayer(s.key, maxNZ);
   });
+
+  function notify() {
+    for (const cb of listeners) {
+      try { cb(currentKey); } catch {}
+    }
+  }
 
   function applyZoomBounds(layer) {
     const zMin = layer?.options?.minZoom ?? 0;
@@ -33,14 +44,44 @@ function attach(map, sources) {
     if (map.getZoom() < zMin) map.setZoom(zMin);
   }
 
-  select.addEventListener('change', () => {
+
+  function setActiveByKey(key) {
+    if (!layers[key]) return;
+    if (key === currentKey && map.hasLayer(layers[key])) {
+      return;
+    }
     Object.values(layers).forEach((l) => map.removeLayer(l));
-    const layer = layers[select.value];
+    const layer = layers[key];
     layer.addTo(map);
     applyZoomBounds(layer);
-  });
-  select.value = sources[0].key;
-  applyZoomBounds(layers[select.value]);
+    currentKey = key;
+    if (select) select.value = key;
+    notify();
+  }
+
+  function getActiveKey() {
+    return currentKey;
+  }
+
+  function onActiveChange(cb) {
+    if (typeof cb !== 'function') return () => {};
+    listeners.add(cb);
+    return () => listeners.delete(cb);
+  }
+
+  const initialKey = sources[0]?.key;
+  if (initialKey) setActiveByKey(initialKey);
+
+  if (select) {
+    select.value = initialKey ?? '';
+    select.addEventListener('change', () => setActiveByKey(select.value));
+  }
+
+  return {
+    get: getActiveKey,
+    set: setActiveByKey,
+    onChange: onActiveChange,
+  };
 }
 
 export const LayerPanel = { attach };

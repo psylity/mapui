@@ -4,6 +4,7 @@ import { INITIAL_VIEW, SOURCES } from './config.js';
 import { LayerPanel } from './panels/layer.js';
 import { ToolsPanel } from './panels/tools/index.js';
 import { ZoomPanel } from './panels/zoom.js';
+import { bindHash } from './lib/hash-params.js';
 
 const map = L.map('map', {
   worldCopyJump: false,
@@ -16,7 +17,12 @@ const map = L.map('map', {
   zoomSnap: 1,
 }).setView([INITIAL_VIEW.lat, INITIAL_VIEW.lon], INITIAL_VIEW.zoom);
 
-LayerPanel.attach(map, SOURCES);
+const layerApi = LayerPanel.attach(map, SOURCES);
+bindHash(map, {
+  defaultView: { lat: INITIAL_VIEW.lat, lon: INITIAL_VIEW.lon, zoom: INITIAL_VIEW.zoom },
+  layerApi,
+  debounceMs: 80
+});
 
 L.control.scale({ imperial: false }).addTo(map);
 
