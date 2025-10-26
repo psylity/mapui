@@ -6,6 +6,7 @@ import { attachRuler } from './ruler.js';
 export const ToolsPanel = {
   attach(map, opts) {
     const { statusEl, btnGeo, btnMeas, btnGoto } = attachPanel(map, {
+      panelId: opts.panelId || 'br-panel',
       statusId: opts.statusId || 'coord-status',
       geolocBtn: opts.geolocBtn || 'btn-geoloc',
       measureBtn: opts.measureBtn || 'btn-measure',
